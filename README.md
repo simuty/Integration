@@ -1,9 +1,6 @@
 # Node学习中的一些笔记📒
 
-### egg-package
+### 进行中
 
-### 示例
+- [rabbitmq系列一](https://github.com/simuty/Node_Demo/blob/main/rabbitmq/README.md)
 
-- [rabbitmq系列一]()
-
-### zk
