@@ -2,5 +2,5 @@
 
 ### 进行中
 
-- [rabbitmq系列一](https://github.com/simuty/Node_Demo/blob/main/rabbitmq/README.md)
-
+- [rabbitmq系列一 基础](http://blog.100boot.cn/post/2929)
+- [rabbitmq系列二 延迟｜死信](http://blog.100boot.cn/post/2958)
