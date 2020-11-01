@@ -4,8 +4,10 @@
   "description": "",
   "main": "emit_log.js",
   "dependencies": {
-    "@types/amqplib": "^0.5.14",
-    "amqplib": "^0.6.0"
+    "@types/amqplib": "^0.5.15",
+    "@types/mockjs": "^1.0.3",
+    "amqplib": "^0.6.0",
+    "mockjs": "^1.1.0"
   },
   "devDependencies": {},
   "scripts": {
