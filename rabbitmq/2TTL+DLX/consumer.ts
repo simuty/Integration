@@ -22,3 +22,4 @@ const url = `amqp://localhost:5672`;
         console.log(error);
     }
 })();
+

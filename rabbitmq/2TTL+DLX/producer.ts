@@ -19,7 +19,7 @@ async function publish(msg: string, ttl: number) {
 }
 
 (async function test(){
-    await publish('msg0 1S Expire', 1000);
+    await publish('msg0 1S Expire', 10000);
     await publish('msg0 2S Expire', 2000);
     await publish('msg0 3S Expire', 3000);
     // 最后一个不会触发
