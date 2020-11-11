@@ -6,10 +6,10 @@ const plugin: EggPlugin = {
   //   enable: true,
   //   package: 'egg-view-nunjucks',
   // },
-  rabbitmq: {
-    enable: true,
-    package: 'egg-rabbitmq',
-  }
+//   rabbitmq: {
+//     enable: true,
+//     package: 'egg-rabbitmq',
+//   }
 };
 
 export default plugin;
