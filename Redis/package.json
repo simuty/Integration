@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "@types/ioredis": "^4.17.7",
-    "ioredis": "^4.19.2"
+    "@types/ioredis": "^4.17.8",
+    "@types/mockjs": "^1.0.3",
+    "@types/redis": "^2.8.28",
+    "ioredis": "^4.19.2",
+    "mockjs": "^1.1.0",
+    "redis": "^3.0.2",
+    "moment": "^2.29.1"
   },
   "devDependencies": {},
   "scripts": {
