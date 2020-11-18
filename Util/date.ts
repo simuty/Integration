@@ -1,7 +1,7 @@
 /*
  * @Author: simuty
  * @Date: 2020-11-17 10:06:01
- * @LastEditTime: 2020-11-17 16:19:51
+ * @LastEditTime: 2020-11-18 17:47:02
  * @LastEditors: Please set LastEditors
  * @Description: 
  */
@@ -29,7 +29,7 @@ export function getLast30Days(): { start: string, end: string } {
  * 获取 【当前月\某月】的开始结束时间 YYYY-MM-DD
  * @param date 如果存在，返回对应月的起止时间
  */
-export function getMonthStartEnd(date?: string): { start: string, end: string } {
+export function getMonthStartEnd(date?: string | moment.Moment): { start: string, end: string } {
     const time = date ? moment(date) : moment();
     const start = moment(time).startOf('month').format('YYYY-MM-DD');
     const end = moment(time).endOf('month').format('YYYY-MM-DD');
@@ -68,20 +68,35 @@ export function dayOfNumInMonth(date?: string): number {
     const time = date ? moment(date) : moment();
     const start = moment(time).startOf('month');
     const end = moment(time, 'YYYY-MM-DD');
-    console.log(start, end);
     const number = end.diff(start, 'd') + 1;
     return number;
 }
 
 /**
- * 返回 某月总的天数
+ *
+ * 返回某个日期 对应月份总天数、天数列表 
  * 
- * @param date 
+ * @export
+ * @param {string} [date] 默认为当前月份
+ * @returns {{ days: number, dayList: string[] }} days: 月份的总天数 dayList: [2020-10-01....]
  */
-export function daysInMonth(date?: string): number {
+export function daysInMonth(date?: string): { days: number, dayList: string[] } {
     const month = date ? moment(date) : moment();
-    return moment(month, "YYYY-MM").daysInMonth()
+    const days = moment(month, "YYYY-MM").daysInMonth()
+    const { start, end } = getMonthStartEnd(month);
+    const dayList: string[] = [];
+    let _start = start;
+    while (moment(start).isSameOrBefore(end)) {
+        dayList.push(moment(_start).format('YYYY-MM-DD'));
+        moment(_start).add(1, 'd');
+    }
+
+    return {
+        dayList,
+        days
+    }
 }
+
 
 // console.log(getYesterday());
 // console.log(getLast7Days());
