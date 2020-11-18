@@ -1,7 +1,7 @@
 /*
  * @Author: simuty
  * @Date: 2020-11-16 16:06:53
- * @LastEditTime: 2020-11-18 17:39:06
+ * @LastEditTime: 2020-11-18 18:54:00
  * @LastEditors: Please set LastEditors
  * @Description: 
  * 
@@ -76,11 +76,10 @@ class BitMap {
         // 初始化数据--日期
         const Random = Mock.Random;
         let isSign = SIGN.NO;
-
         // 获取上月份的起止时间
         for (const month of totalMonth) {
             // month对应的天数
-            const days = DateUtil.daysInMonth(month);
+            const {days} = DateUtil.daysInMonth(month);
             // allUser 用户ID作为key中的标示
             for (let uid = 1; uid <= this.allUser; uid++) {
                 // 【偏移量+1】就是某月对应的几号
@@ -114,7 +113,7 @@ class BitMap {
             // 获取上月份的起止时间
             for (const month of totalMonth) {
                 // month对应的天数
-                const days = DateUtil.daysInMonth(month);
+                const {days} = DateUtil.daysInMonth(month);
                 // allUser 用户ID作为key中的标示
                 // 【偏移量+1】就是某月对应的几号
                 let offset = 0;
@@ -137,7 +136,7 @@ class BitMap {
         const offset = DateUtil.dayOfNumInMonth(date);
         const status = SIGN.YES;
         await this.client.setbit(this.genKey(date, uid), offset-1,  status);
-        console.log(`用户${uid}在${date}签到为${status}`);
+        console.log(`用户${uid}在 ${date}签到为${status}`);
     }
     /**
      * 判断用户在某天是否签到
@@ -148,7 +147,7 @@ class BitMap {
         const offset = DateUtil.dayOfNumInMonth(date);
         const status = await this.client.getbit(this.genKey(date, uid), offset-1);
         await this.getAllData(['2020-11']);
-        console.log(`用户${uid}在${date}签到状态为${status}`);
+        console.log(`用户${uid}在 ${date}签到状态为${status}`);
     }
     /**
      * 用户X在XX月总的签到次数
@@ -166,17 +165,25 @@ class BitMap {
      * @param date 
      */
     public async getSignInfo(uid: number, date: string) {
-        const days = DateUtil.daysInMonth('2020-10');
-        const key = this.genKey(date, uid);
-        // 无符号+该月总天数
-        const type = `u${days}`;
-        // @ts-ignore
-        const count = this.client.bitfield(key, BITFIELD.GET, type, '0')
-        for (let index = 0; index < array.length; index++) {
-            const element = array[index];
+        // const {days, dayList} = DateUtil.daysInMonth('2020-10');
+        // const key = this.genKey(date, uid);
+        // // 无符号+该月总天数
+        // const type = `u${days}`;
+        // // @ts-ignore
+        // const count = this.client.bitfield(key, BITFIELD.GET, type, '0')
+        // for (let index = dayList.length; index > 0; index--) {
+        //     const element = array[index];
             
-        }
+        // }
 
+    }
+
+    // 用户在某月第一次签到的日期
+    public async getFirstSignDate(uid: number, date: string) {
+        // @ts-ignore
+        const index = await this.client.bitpos(this.genKey(date, uid), SIGN.YES);
+        const result: any = index < 0 ? null : DateUtil.withDayOfMonth(Number(index));
+        console.log(`用户${uid}在 ${date} 月份 首次签到 日期为${result}`);
     }
 
 
@@ -310,24 +317,28 @@ class BitMap {
     // 展示10月份全部签到数据
     await bitmap.getAllData(['2020-10']);
 
+    const [uid1, uid2] = [1, 2]
+
     // 用户X签到
-    await bitmap.userSign(2, '2020-11-18');
+    await bitmap.userSign(uid2, '2020-11-18');
     // 用户X在XX日期是否签到
-    await bitmap.judgeUserSign(2, '2020-11-18');
+    await bitmap.judgeUserSign(uid2, '2020-11-18');
     // 用户X在XX月总的签到次数
-    await bitmap.getUserSignCount(2, '2020-10');
+    await bitmap.getUserSignCount(uid2, '2020-10');
+    // 用户X在XX月第一次签到的日期
+    await bitmap.getFirstSignDate(uid2, '2020-11');
 
 
     // 某天签到总数量
     // await bitmap.todayAllData();
     // 最近7天
-    await bitmap.signAllWeek();
-    // 最近30天
-    await bitmap.signAllMonth();
-    // 最近7天 sign >= 1
-    await bitmap.signInWeek();
-    // 某人在某年总的签到次数
-    await bitmap.yearSign(2);
+    // await bitmap.signAllWeek();
+    // // 最近30天
+    // await bitmap.signAllMonth();
+    // // 最近7天 sign >= 1
+    // await bitmap.signInWeek();
+    // // 某人在某年总的签到次数
+    // await bitmap.yearSign(2);
     // 某人在某月首次签到的日期
 
 

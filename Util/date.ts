@@ -1,7 +1,7 @@
 /*
  * @Author: simuty
  * @Date: 2020-11-17 10:06:01
- * @LastEditTime: 2020-11-18 17:47:02
+ * @LastEditTime: 2020-11-18 18:48:11
  * @LastEditors: Please set LastEditors
  * @Description: 
  */
@@ -72,6 +72,19 @@ export function dayOfNumInMonth(date?: string): number {
     return number;
 }
 
+
+/**
+ * 返回某月第index的日期
+ * @param index 
+ * @param date 
+ */
+export function withDayOfMonth(index: number, date?: string): string {
+    const time = date ? moment(date) : moment();
+    const start = moment(time).startOf('month');
+    const findDate = moment(start.add(index, 'd')).format('YYYY-MM-DD');
+    return findDate;
+}
+
 /**
  *
  * 返回某个日期 对应月份总天数、天数列表 
@@ -85,12 +98,11 @@ export function daysInMonth(date?: string): { days: number, dayList: string[] } 
     const days = moment(month, "YYYY-MM").daysInMonth()
     const { start, end } = getMonthStartEnd(month);
     const dayList: string[] = [];
-    let _start = start;
-    while (moment(start).isSameOrBefore(end)) {
+    let _start = moment(start);
+    while (moment(_start).isSameOrBefore(moment(end))) {
         dayList.push(moment(_start).format('YYYY-MM-DD'));
-        moment(_start).add(1, 'd');
+        _start = moment(_start).add(1, 'd');
     }
-
     return {
         dayList,
         days
