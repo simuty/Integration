@@ -1,14 +1,14 @@
 /*
  * @Author: simuty
  * @Date: 2020-11-18 15:04:32
- * @LastEditTime: 2020-11-19 15:44:40
+ * @LastEditTime: 2020-11-19 18:35:19
  * @LastEditors: Please set LastEditors
  * @Description: 
  * 
  */
 
 
- // 字符串转二进制
+// 字符串转二进制
 'a'.charCodeAt(0).toString(2)
 
 
@@ -32,7 +32,7 @@ console.log(2 & 1)    // 0
 console.log(3 & 1)    // 1
 
 
-console.log(~~ 6.83)    // 6
+console.log(~~6.83)    // 6
 console.log(6.83 >> 0)  // 6
 console.log(6.83 << 0)  // 6
 console.log(6.83 | 0)   // 6
@@ -50,32 +50,32 @@ console.log(a)   // 8
 console.log(b)   // 5
 
 
-/**
- * 16进制颜色值转RGB
- * @param  {String} hex 16进制颜色字符串
- * @return {String}     RGB颜色字符串
- */
-function hexToRGB(hex) {
-    var hexx = hex.replace('#', '0x')
-    var r = hexx >> 16
-    var g = hexx >> 8 & 0xff
-    var b = hexx & 0xff
-    return `rgb(${r}, ${g}, ${b})`
-}
+// /**
+//  * 16进制颜色值转RGB
+//  * @param  {String} hex 16进制颜色字符串
+//  * @return {String}     RGB颜色字符串
+//  */
+// function hexToRGB(hex) {
+//     var hexx = hex.replace('#', '0x')
+//     var r = hexx >> 16
+//     var g = hexx >> 8 & 0xff
+//     var b = hexx & 0xff
+//     return `rgb(${r}, ${g}, ${b})`
+// }
 
-/**
- * RGB颜色转16进制颜色
- * @param  {String} rgb RGB进制颜色字符串
- * @return {String}     16进制颜色字符串
- */
-function RGBToHex(rgb) {
-    var rgbArr = rgb.split(/[^\d]+/)
-    var color = rgbArr[1]<<16 | rgbArr[2]<<8 | rgbArr[3]
-    return '#'+ color.toString(16)
-}
-// -------------------------------------------------
-hexToRGB('#ffffff')               // 'rgb(255,255,255)'
-RGBToHex('rgb(255,255,255)')      // '#ffffff'
+// /**
+//  * RGB颜色转16进制颜色
+//  * @param  {String} rgb RGB进制颜色字符串
+//  * @return {String}     16进制颜色字符串
+//  */
+// function RGBToHex(rgb: string) {
+//     var rgbArr = rgb.split(/[^\d]+/)
+//     var color = rgbArr[1] << 16 | rgbArr[2] << 8 | rgbArr[3]
+//     return '#' + color.toString(16)
+// }
+// // -------------------------------------------------
+// hexToRGB('#ffffff')               // 'rgb(255,255,255)'
+// RGBToHex('rgb(255,255,255)')      // '#ffffff'
 
 
 
@@ -83,7 +83,7 @@ RGBToHex('rgb(255,255,255)')      // '#ffffff'
 // https://juejin.im/post/6844903846947323918#heading-19
 
 // !该函数用来返回x中从右边数第p位开始向右数n位二进制。
-function getBits(x: number, p: number, n: number) {
+export function getBits(x: number, p: number, n: number) {
     return (x >> (p + 1 - n)) & ~(~0 << n);
 }
 
@@ -143,7 +143,7 @@ $1是为了取出y最右边n个二进制，并与x中待修改的那n个二进�
 */
 
 
-function setBits(x: number, p: number, n: number, y: number) {
+export function setBits(x: number, p: number, n: number, y: number) {
     return (x & ~(~(~0 << n) << (p + 1 - n))) |
         (y & ~(~0 << n)) << (p + 1 - n);
 }
@@ -158,3 +158,42 @@ console.log("168-偏移后的 十进制: ", bit_key_11)
 console.log("68-偏移后的 二进制: ", bit_key_22)
 console.log(`偏移的二进制是: 0b0101, 对应的十进制为：${0b0101}`)
 console.log('---------');
+
+/** 
+168-偏移后的 十进制:  148
+68-偏移后的 二进制:  10010100
+偏移的二进制是: 0b0101, 对应的十进制为：5
+*/
+
+
+
+export function isOdd(value: number) {
+    return (value & 1); // 取出最后一位二进制，若为1则是奇数
+}
+
+
+/**
+ * 统计二进制数据中1的个数
+ * @param num 二进制数据
+ * 1. 八进制 0o
+ * 2. 二进制 0b
+ * 3. 十六进制 0x
+ * 4. 其余的都按十进制计算
+ */
+export function bitcount(num: number) {
+    // int x =0xba;//10111010
+    let count = 0;
+    while (num != 0) {
+        num = num & (num - 1);
+        count++;
+    }
+    return count;
+}
+
+
+
+const num1 = bitcount(0o377);
+const num2 = bitcount(0xff);
+const num3 = bitcount(0b11111111);
+const num4 = bitcount(255);
+console.log("二进制中1的总数为:", num1, num2, num3, num4);

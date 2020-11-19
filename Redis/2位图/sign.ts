@@ -1,7 +1,7 @@
 /*
  * @Author: simuty
  * @Date: 2020-11-16 16:06:53
- * @LastEditTime: 2020-11-19 15:06:53
+ * @LastEditTime: 2020-11-19 18:40:14
  * @LastEditors: Please set LastEditors
  * @Description: 
  * 
@@ -19,8 +19,9 @@
 import * as redis from 'ioredis'
 import * as moment from 'moment';
 import * as Mock from 'mockjs';
-import * as DateUtil from '../../Util/date';
+import * as UtilDate from '../../Util/date';
 import * as common from '../../Util/common';
+import * as UtilBit from '../../Util/bit';
 
 
 // 签到
@@ -82,7 +83,7 @@ class BitMap {
         // 获取上月份的起止时间
         for (const month of totalMonth) {
             // month对应的天数
-            const { days } = DateUtil.daysInMonth(month);
+            const { days } = UtilDate.daysInMonth(month);
             // allUser 用户ID作为key中的标示
             for (let uid = 1; uid <= this.allUser; uid++) {
                 // 【偏移量+1】就是某月对应的几号
@@ -116,7 +117,7 @@ class BitMap {
             // 获取上月份的起止时间
             for (const month of totalMonth) {
                 // month对应的天数
-                const { days } = DateUtil.daysInMonth(month);
+                const { days } = UtilDate.daysInMonth(month);
                 // allUser 用户ID作为key中的标示
                 // 【偏移量+1】就是某月对应的几号
                 let offset = 0;
@@ -136,7 +137,7 @@ class BitMap {
      * @param date YYYY-MM—DD
      */
     public async userSign(uid: number, date: string) {
-        const offset = DateUtil.dayOfNumInMonth(date);
+        const offset = UtilDate.dayOfNumInMonth(date);
         const status = SIGN.YES;
         await this.client.setbit(this.genKey({ date, uid }), offset - 1, status);
         console.log(`用户${uid}在 ${date}签到为${status}`);
@@ -147,7 +148,7 @@ class BitMap {
      * @param date YYYY-MM—DD
      */
     public async judgeUserSign(uid: number, date: string) {
-        const offset = DateUtil.dayOfNumInMonth(date);
+        const offset = UtilDate.dayOfNumInMonth(date);
         const status = await this.client.getbit(this.genKey({ date, uid }), offset - 1);
         await this.getAllData(['2020-11']);
         console.log(`用户${uid}在 ${date}签到状态为${status}`);
@@ -170,7 +171,7 @@ class BitMap {
      * @param date 
      */
     public async getSignInfo(uid: number, date: string) {
-        const { days, dayList } = DateUtil.daysInMonth(date);
+        const { days, dayList } = UtilDate.daysInMonth(date);
         const key = this.genKey({ date, uid });
         // days 该月总天数
         const bitValue = await this.genBitIntervalValue({ key, start: 0, length: days });
@@ -237,7 +238,7 @@ class BitMap {
     public async getFirstSignDate(uid: number, date: string) {
         // @ts-ignore
         const index = await this.client.bitpos(this.genKey({ date, uid }), SIGN.YES);
-        const result: any = index < 0 ? null : DateUtil.withDayOfMonth(Number(index));
+        const result: any = index < 0 ? null : UtilDate.withDayOfMonth(Number(index));
         console.log(`用户${uid}在 ${date} 月份 首次签到 日期为${result}`);
     }
 
@@ -248,8 +249,8 @@ class BitMap {
     public async signAllWeek() {
         const allUid = [1, 2, 3];
         const [start, length] = [4, 7];
-        const { days, dayList } = DateUtil.daysInMonth();
-        const tmpList = [];
+        const month = this.genDate('2020-10');
+        // const tmpList = [];
         // !方法一：为了练习 bitfield SET、tmp value。
         // for (const uid of allUid) {
         //     const key = this.genKey({ uid });
@@ -269,15 +270,18 @@ class BitMap {
         // !方法二，一个判断就够了
         let total = 0;
         for (const uid of allUid) {
-            const key = this.genKey({ uid });
+            const key = this.genKey({ uid, date: month });
             // 统计某7天的bit值
             const bitValue = await this.genBitIntervalValue({ key, start, length });
-            bitValue.toString(2) === ''
-            const tmpTotal = await this.client.bitcount(bitValue);
-            if()
+            // 包含1的总数
+            const tmpTotal = UtilBit.bitcount(bitValue);
+            // 如果全是1，则全签到了
+            if(tmpTotal === length) {
+                total++;
+            }
         }
         console.log('----------本月某七天-----------')
-        await this.statisticsLastDayAnd(BitMap.SIGN_ALL_WEEK_KEY, tmpList );
+        console.log(`本月第${start}到${start+length-1}天 中所有的签到次数: ${total}`);
     }
     /** -----------------统计近30天连续签到的用户----------------------------- */
     public async signAllMonth() {
