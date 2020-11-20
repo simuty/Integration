@@ -1,7 +1,7 @@
 /*
  * @Author: simuty
  * @Date: 2020-11-12 13:45:29
- * @LastEditTime: 2020-11-13 15:41:14
+ * @LastEditTime: 2020-11-20 11:14:19
  * @LastEditors: Please set LastEditors
  * @Description:
  * 参考连接：
@@ -256,7 +256,7 @@ async function zsetFun() {
     // 2. 删除, 按score区间、起止、
     await redis.zrem(key1, 'xiaming');
     await redis.zrem(key2, 'xiaming');
-    // await redis.zremrangebyscore(key, 10, 60);
+    await redis.zremrangebyscore(key, 10, 60);
     // 3. 总个数
     const count = await redis.zcard(key);
     // 4. 区间内个数

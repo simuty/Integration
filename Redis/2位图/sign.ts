@@ -1,7 +1,7 @@
 /*
  * @Author: simuty
  * @Date: 2020-11-16 16:06:53
- * @LastEditTime: 2020-11-19 18:40:14
+ * @LastEditTime: 2020-11-19 18:49:20
  * @LastEditors: Please set LastEditors
  * @Description: 
  * 
@@ -376,8 +376,6 @@ class BitMap {
         }
         return binary;
     }
-
-
 }
 
 

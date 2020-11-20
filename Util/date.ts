@@ -1,12 +1,13 @@
 /*
  * @Author: simuty
  * @Date: 2020-11-17 10:06:01
- * @LastEditTime: 2020-11-18 18:48:11
+ * @LastEditTime: 2020-11-20 11:03:44
  * @LastEditors: Please set LastEditors
  * @Description: 
  */
 
 import * as moment from 'moment';
+
 
 
 /**
@@ -109,8 +110,85 @@ export function daysInMonth(date?: string): { days: number, dayList: string[] } 
     }
 }
 
+/**
+ * 将各种时间转换成日期时间格式字符串 YYYY-MM-DD HH:mm:ss
+ *
+ * @param {Date | moment.Moment | number} time 如果是number，则为秒级时间戳
+ * @return {string}
+ */
+export function format2DateTime(time?: Date | moment.Moment | number) {
+    let mt: moment.Moment;
 
-// console.log(getYesterday());
-// console.log(getLast7Days());
-// console.log(getLast30Days());
-// console.log(getLastDays(7));
+    if (!time) {
+        mt = moment();
+    } else if (time instanceof Date) {
+        mt = moment(time);
+    } else if (moment.isMoment(time)) {
+        mt = time;
+    } else {
+        mt = moment(time, 'X');
+    }
+
+    return mt.format('YYYY-MM-DD HH:mm:ss');
+}
+
+/**
+ * 将各种时间转换成日期格式字符串 YYYY-MM-DD
+ *
+ * @param {Date | moment.Moment | number} time 如果是number，则为秒级时间戳
+ * @param {string} format
+ * @return {string}
+ */
+export function format2Date(time?: Date | moment.Moment | number, format: string = 'YYYY-MM-DD') {
+    let mt: moment.Moment;
+
+    if (!time) {
+        mt = moment();
+    } else if (time instanceof Date) {
+        mt = moment(time);
+    } else if (moment.isMoment(time)) {
+        mt = time;
+    } else {
+        mt = moment(time, 'X');
+    }
+
+    return mt.format(format);
+}
+
+/**
+ * 
+ *
+ * @param {Date | moment.Moment | string} time
+ * @return {number} Unix 时间戳 毫秒
+ */
+/**
+ * 将各种时间转换成unix时间戳 单位 毫秒 或 秒
+ * 1. 
+ * @param args 
+ */
+// 时间戳类型  毫秒 | 秒
+type UNIX_TYPE = 'MS' | 'S';
+export function formatUnix(args?: { time?: Date | moment.Moment | string, type?: UNIX_TYPE }) {
+    if(!args){
+        return moment().unix()
+    }
+    const { time = moment(), type = 'S' } = args;
+    let mt: moment.Moment;
+    if (time instanceof Date) {
+        mt = moment(time);
+    } else if (moment.isMoment(time)) {
+        mt = time;
+    } else {
+        mt = moment(time, 'YYYY-MM-DD HH:mm:ss');
+    }
+    return type === 'S' ?  mt.unix() : mt.valueOf();
+}
+
+
+// 当天剩余秒数
+export function remainSecond() {
+    // 计算截止当天晚上23:59:59秒数
+    const end = moment().endOf('day');
+    const now = moment();
+    return end.diff(now, 'second');
+}
