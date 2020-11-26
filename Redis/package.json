@@ -9,7 +9,9 @@
     "ioredis": "^4.19.2",
     "mockjs": "^1.1.0",
     "redis": "^3.0.2",
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "@types/uuid": "^8.3.0",
+    "uuid": "^8.3.1"
   },
   "devDependencies": {},
   "scripts": {
