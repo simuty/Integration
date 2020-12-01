@@ -11,13 +11,26 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${file}"
+            "program": "${file}",
         },
         {
             "name": "egg-agent",
             "type": "node",
             "request": "launch",
             "cwd": "${workspaceRoot}/Node/egg-agent",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "debug"],
+            "console": "integratedTerminal",
+            "protocol": "auto",
+            "restart": true,
+            "port": 9229,
+            "autoAttachChildProcesses": true,
+        },
+        {
+            "name": "redis",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceRoot}/Redis/8project",
             "runtimeExecutable": "npm",
             "runtimeArgs": ["run", "debug"],
             "console": "integratedTerminal",

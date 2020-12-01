@@ -1,5 +1,8 @@
-import { Sequelize, DataTypes } from 'sequelize';
-export default function (sequelize: Sequelize) {
+'use strict';
+
+module.exports = app => {
+  const DataTypes = app.Sequelize;
+  const sequelize = app.model;
   const attributes = {
     id: {
       type: DataTypes.INTEGER(),
@@ -31,7 +34,7 @@ export default function (sequelize: Sequelize) {
     sendDate: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
       primaryKey: false,
       autoIncrement: false,
       comment: "发红包时间",
@@ -90,4 +93,4 @@ export default function (sequelize: Sequelize) {
   };
   const TRedPacketModel = sequelize.define("tRedPacketModel", attributes, options);
   return TRedPacketModel;
-}
+};
