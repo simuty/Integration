@@ -1,8 +1,5 @@
-'use strict';
-
-module.exports = app => {
-  const DataTypes = app.Sequelize;
-  const sequelize = app.model;
+import { Sequelize, DataTypes } from 'sequelize';
+export default function (sequelize: Sequelize) {
   const attributes = {
     id: {
       type: DataTypes.INTEGER(12),
@@ -62,9 +59,8 @@ module.exports = app => {
   const options = {
     tableName: "t_user_red_packet",
     comment: "",
-    indexes: [],
-    timestamps: false, //去除createAt updateAt
+    indexes: []
   };
   const TUserRedPacketModel = sequelize.define("tUserRedPacketModel", attributes, options);
   return TUserRedPacketModel;
-};
+}
