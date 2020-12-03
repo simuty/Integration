@@ -54,6 +54,24 @@ export default function (sequelize: Sequelize) {
       autoIncrement: false,
       comment: "备注",
       field: "note"
+    },
+    createAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "创建时间",
+      field: "create_at"
+    },
+    updateAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "更新时间",
+      field: "update_at"
     }
   };
   const options = {

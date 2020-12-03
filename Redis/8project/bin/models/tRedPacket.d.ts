@@ -1,6 +1,7 @@
 import { Model, BuildOptions } from 'sequelize';
 export interface ITRedPacketAttributes {
   id: number,
+  type: number,
   userId: number,
   amount: number,
   sendDate: Date,
@@ -9,6 +10,8 @@ export interface ITRedPacketAttributes {
   stock: number,
   version: number,
   note?: string,
+  createAt: Date,
+  updateAt: Date,
 }
 export interface ITRedPacketModel extends ITRedPacketAttributes, Model {}
 export type ITRedPacketModelStatic = typeof Model & {

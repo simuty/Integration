@@ -10,6 +10,15 @@ export default function (sequelize: Sequelize) {
       comment: "红包ID",
       field: "id"
     },
+    type: {
+      type: DataTypes.INTEGER(12),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "1: 固定红包 2: 公平红包 3: 拼手速",
+      field: "type"
+    },
     userId: {
       type: DataTypes.INTEGER(12),
       allowNull: false,
@@ -81,6 +90,24 @@ export default function (sequelize: Sequelize) {
       autoIncrement: false,
       comment: "备注",
       field: "note"
+    },
+    createAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "创建时间",
+      field: "create_at"
+    },
+    updateAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "更新时间",
+      field: "update_at"
     }
   };
   const options = {

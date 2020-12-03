@@ -6,6 +6,8 @@ export interface ITUserRedPacketAttributes {
   amount: number,
   grabTime: Date,
   note?: string,
+  createAt: Date,
+  updateAt: Date,
 }
 export interface ITUserRedPacketModel extends ITUserRedPacketAttributes, Model {}
 export type ITUserRedPacketModelStatic = typeof Model & {
