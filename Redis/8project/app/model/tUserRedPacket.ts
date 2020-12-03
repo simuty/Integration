@@ -57,13 +57,30 @@ module.exports = app => {
       autoIncrement: false,
       comment: "备注",
       field: "note"
+    },
+    createAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "创建时间",
+      field: "create_at"
+    },
+    updateAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "更新时间",
+      field: "update_at"
     }
   };
   const options = {
     tableName: "t_user_red_packet",
     comment: "",
-    indexes: [],
-    timestamps: false, //去除createAt updateAt
+    indexes: []
   };
   const TUserRedPacketModel = sequelize.define("tUserRedPacketModel", attributes, options);
   return TUserRedPacketModel;
