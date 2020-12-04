@@ -26,6 +26,7 @@
     "egg": "^2.6.1",
     "egg-scripts": "^2.6.0",
     "egg-sequelize": "^6.0.0",
+    "ioredis": "^4.19.2",
     "mathjs": "^8.0.1",
     "mysql2": "^2.2.5"
   },

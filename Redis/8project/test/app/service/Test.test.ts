@@ -14,7 +14,7 @@ describe('test/app/service/Test.test.js', () => {
     assert(result === 'hi, egg');
   });
   it.only('生成红包', async () => {
-    const args = { userId: 1, amount: 10, total: 20, type: 2, unitAmount: 0, stock: 20, note: '测试红包', sendDate: '2020-12-12' };
+    const args = { userId: 1, amount: 100, total: 20, type: 2, unitAmount: 0, stock: 20, note: '测试红包', sendDate: '2020-12-12' };
     await ctx.service.redPacket.createRp(args);
   });
 });

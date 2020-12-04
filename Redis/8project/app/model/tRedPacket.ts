@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = app => {
   const DataTypes = app.Sequelize;
@@ -10,8 +10,8 @@ module.exports = app => {
       defaultValue: null,
       primaryKey: true,
       autoIncrement: true,
-      comment: "红包ID",
-      field: "id"
+      comment: '红包ID',
+      field: 'id',
     },
     type: {
       type: DataTypes.INTEGER(12),
@@ -19,8 +19,8 @@ module.exports = app => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "1: 固定红包 2: 公平红包 3: 拼手速",
-      field: "type"
+      comment: '1: 固定红包 2: 公平红包 3: 拼手速',
+      field: 'type',
     },
     userId: {
       type: DataTypes.INTEGER(12),
@@ -28,17 +28,17 @@ module.exports = app => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "发红包用户ID",
-      field: "user_id"
+      comment: '发红包用户ID',
+      field: 'user_id',
     },
     amount: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.INTEGER(12),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "红包金额",
-      field: "amount"
+      comment: '红包总金额 单位：分',
+      field: 'amount',
     },
     sendDate: {
       type: DataTypes.DATE,
@@ -46,8 +46,8 @@ module.exports = app => {
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
       primaryKey: false,
       autoIncrement: false,
-      comment: "发红包时间",
-      field: "send_date"
+      comment: '发红包时间',
+      field: 'send_date',
     },
     total: {
       type: DataTypes.INTEGER(12),
@@ -55,8 +55,8 @@ module.exports = app => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "小红包总数",
-      field: "total"
+      comment: '小红包总数',
+      field: 'total',
     },
     unitAmount: {
       type: DataTypes.DECIMAL,
@@ -64,8 +64,8 @@ module.exports = app => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "单个小红包金额",
-      field: "unit_amount"
+      comment: '单个小红包金额 单位：分，仅限《固定红包》',
+      field: 'unit_amount',
     },
     stock: {
       type: DataTypes.INTEGER(12),
@@ -73,17 +73,17 @@ module.exports = app => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "剩余小红包个数",
-      field: "stock"
+      comment: '剩余小红包个数',
+      field: 'stock',
     },
     version: {
       type: DataTypes.INTEGER(12),
       allowNull: false,
-      defaultValue: "0",
+      defaultValue: '0',
       primaryKey: false,
       autoIncrement: false,
-      comment: "版本",
-      field: "version"
+      comment: '版本',
+      field: 'version',
     },
     note: {
       type: DataTypes.STRING(256),
@@ -91,8 +91,8 @@ module.exports = app => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "备注",
-      field: "note"
+      comment: '备注',
+      field: 'note',
     },
     createAt: {
       type: DataTypes.DATE,
@@ -100,8 +100,8 @@ module.exports = app => {
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
       primaryKey: false,
       autoIncrement: false,
-      comment: "创建时间",
-      field: "create_at"
+      comment: '创建时间',
+      field: 'create_at',
     },
     updateAt: {
       type: DataTypes.DATE,
@@ -109,15 +109,15 @@ module.exports = app => {
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
       primaryKey: false,
       autoIncrement: false,
-      comment: "更新时间",
-      field: "update_at"
-    }
+      comment: '更新时间',
+      field: 'update_at',
+    },
   };
   const options = {
-    tableName: "t_red_packet",
-    comment: "",
-    indexes: []
+    tableName: 't_red_packet',
+    comment: '',
+    indexes: [],
   };
-  const TRedPacketModel = sequelize.define("tRedPacketModel", attributes, options);
+  const TRedPacketModel = sequelize.define('tRedPacketModel', attributes, options);
   return TRedPacketModel;
 };
