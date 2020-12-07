@@ -43,7 +43,7 @@ module.exports = app => {
     sendDate: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: app.Sequelize.literal('CURRENT_TIMESTAMP'),
       primaryKey: false,
       autoIncrement: false,
       comment: '发红包时间',
@@ -59,7 +59,7 @@ module.exports = app => {
       field: 'total',
     },
     unitAmount: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.INTEGER(),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
@@ -97,7 +97,7 @@ module.exports = app => {
     createAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: app.Sequelize.literal('CURRENT_TIMESTAMP'),
       primaryKey: false,
       autoIncrement: false,
       comment: '创建时间',
@@ -106,7 +106,7 @@ module.exports = app => {
     updateAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: app.Sequelize.literal('CURRENT_TIMESTAMP'),
       primaryKey: false,
       autoIncrement: false,
       comment: '更新时间',

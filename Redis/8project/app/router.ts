@@ -18,5 +18,10 @@ export default (app: Application) => {
   // https://github.com/niantianlei/red-packet/blob/master/src/com/nian/controller/UserRedPacketController.java
   // https://github.com/niantianlei/red-packet
   router.get('/', controller.home.index);
-  router.post('/redPacket', controller.redPacket.grap);
+  // 生成红包
+  router.post('/redPacket/create', controller.redPacket.create);
+  // redis 队列
+  router.post('/redPacket/grapSql', controller.redPacket.grap_mysql);
+  router.post('/redPacket/grapLua', controller.redPacket.grap_lua);
+
 };
