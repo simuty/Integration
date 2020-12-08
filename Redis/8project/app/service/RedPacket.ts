@@ -16,9 +16,9 @@ enum RP_TYPE {
 // redis 前缀
 const REDIS_KEY = 'project:rp:';
 // 红包默认队列 【未消费队列】
-const RP_DEFALUT_LIST = `${REDIS_KEY}defalut:`;
+const RP_DEFALUT_LIST = `${REDIS_KEY}:list:defalut:`;
 // 红包消费队列
-const RP_CONSUME_LIST = `${REDIS_KEY}consume:`;
+const RP_CONSUME_LIST = `${REDIS_KEY}:list:consume:`;
 // 用于用户去重
 const RP_USER_SET = `${REDIS_KEY}uniq:`;
 
@@ -38,25 +38,26 @@ export default class RedPacket extends Service {
         const { id } = await this.ctx.model.TRedPacket.create({ userId, amount, sendDate, total, unitAmount, stock, note, type });
         // 2. 生成红包算法
         const rpList = this.generateRp(type, total, amount, unitAmount);
-        console.log(rpList, rpList.length);
         const redPacketList: any[] = [];
-        const redisList: any[] = [];
         for (const smallAmount of rpList) {
             redPacketList.push({
                 redPacketId: id,
                 amount: smallAmount,
             });
-            redisList.push(JSON.stringify({
-                amount: smallAmount,
-            }))
+            
         }
-        console.log('redisList', redisList.length, redisList);
         // 3. 生成红包用户表
         const list = await this.ctx.model.TUserRedPacket.bulkCreate(redPacketList);
-        // 4. 插入队列
+        // 4. 插入待消费队列
+        const redisList: any[] = [];
+        for (const item of list) {
+            const {id, redPacketId: rpId, amount} = item;
+            redisList.push(JSON.stringify({
+                amount, rpId, id
+            }))
+        }
         const redisListkey = `${RP_DEFALUT_LIST}${id}`
         await this.app.redis.lpush(redisListkey, ...redisList);
-        // const first = await this.app.redis.rpop(redisListkey);
         return list;
     }
 
@@ -92,7 +93,6 @@ export default class RedPacket extends Service {
 
     }
 
-
     /**
      * redis+lua抢红包
      * @param packetId 
@@ -100,23 +100,20 @@ export default class RedPacket extends Service {
      */
     public async getRedPacket_redis_lua(packetId: number, userId: number) {
         const redisDefalueKey = `${RP_DEFALUT_LIST}${packetId}`;
-        const redisConsumeKey = `${RP_DEFALUT_LIST}${packetId}`;
-        const redisMapKey = `${RP_USER_SET}${packetId}`;
-
-        const filePath = path.join(__dirname, 'redpacket.lua');
+        const redisConsumeKey = `${RP_CONSUME_LIST}${packetId}`;
+        const redisSetKey = `${RP_USER_SET}${packetId}`;
+        const filePath = path.join(__dirname, '../bin/redpacket.lua');
         const luaScript = fs.readFileSync(filePath, "utf8");
-
-        // this.app.redis.defineCommand('test', {
-        //     numberOfKeys: 4,
-        //     lua: fs.readFileSync('./redpacket.lua', "utf8")
-        // });
-
-        // @ts-ignore
-        // await this.app.redis.test(redisDefalueKey, redisConsumeKey, redisMapKey, userId);
-        // console.log("111", luaScript);
-        console.log(redisDefalueKey, redisConsumeKey, redisMapKey, userId);
-        const result = await this.app.redis.eval(luaScript, 4,  redisDefalueKey, redisConsumeKey, redisMapKey, userId);
-        console.log('2222', result);
+        const result = await this.app.redis.eval(luaScript, 3,  redisDefalueKey, redisConsumeKey, redisSetKey, userId);
+        if(result === 100){
+            console.log('已经抢过了～', userId)
+        }
+        if(result === 200){
+            console.log('红包空了', userId)
+        }
+        if(typeof result === 'string') {
+            console.log('抢红包成功', result)
+        }
         return result;
     }
 

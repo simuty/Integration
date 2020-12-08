@@ -1,36 +1,33 @@
 --[[
 Author: simuty
 Date: 2020-12-07 10:25:35
-LastEditTime: 2020-12-07 15:57:12
+LastEditTime: 2020-12-08 16:04:30
 LastEditors: Please set LastEditors
 Description: 
 --]]
 -- 函数：尝试获得红包，如果成功，则返回json字符串，如果不成功，则返回空
---- 
--- 参数：未消费队列名、已消费的队列名、去重的Map名、用户ID
----- 
+---
+-- 参数：
+--- KEYS[1-3] 未消费队列名、已消费的队列名、hset key <集合: 去重用户>
+--- ARGV[1] 用户ID
 -- 返回值：nil 或者 json字符串
----- {userId: xxx, packetId: xxx, money: 11} : 用户ID：userId，红包ID：packetId，红包金额：money
+---- {userId: xxx, packetId: xxx, amount: 11} : 用户ID：userId，红包ID：packetId，红包金额：money
 
--- 如果用户已抢过红包，则返回nil
--- if redis.call("hexists", KEYS[3], KEYS[4]) ~= 0 then
-local a = '1'
-if redis.call("hexists", KEYS[4]) ~= 0 then
-    print('1111')
-    return nil
+-- 用户是否抢过
+local judge = redis.call("SISMEMBER", KEYS[3], ARGV[1])
+if judge ~= 0 then
+    return 100 -- 已经抢过了
 else
-    -- 先取出一个小红包
-    local hongBao = redis.call("rpop", KEYS[1])
-    if hongBao then
-        local x = cjson.decode(hongBao)
-        -- 加入用户ID信息
-        x["userId"] = KEYS[4]
-        local re = cjson.encode(x)
-        -- 把用户ID放到去重的set里
-        redis.call("hset", KEYS[3], KEYS[4], KEYS[4])
-        -- 把红包放到已消费队列里
-        redis.call("lpush", KEYS[2], re)
-        return re
+    local item = redis.call("RPOP", KEYS[1]) -- 先取出一个小红包
+    if item then
+        local _item = cjson.decode(item)
+        _item["userId"] = ARGV[1] -- 加入用户ID信息
+        local newItem = cjson.encode(_item)
+        redis.call("SADD", KEYS[3], ARGV[1]) -- 把用户ID放到去重的set里
+        redis.call("LPUSH", KEYS[2], newItem) -- 把红包放到已消费队列里
+        return newItem
+    else
+        return 200 -- 红包队列已经为空
     end
 end
 return nil

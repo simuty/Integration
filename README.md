@@ -13,7 +13,10 @@
 2. [Redis系列二 位图](https://simuty.com/2020/11/19/redis_2/)
 3. [Redis系列三 限流](https://simuty.com/2020/11/20/redis_3/)
 4. [Redis系列四 GEO附近的人](https://simuty.com/2020/11/23/redis_4/)
-5. [Redis系列四 锁](https://simuty.com/2020/11/25/redis_5/)
+5. [Redis系列五 锁](https://simuty.com/2020/11/25/redis_5/)
+6. [Redis系列六 Lua](https://simuty.com/2020/11/26/redis_6/)
+7. [Redis系列七 调试Lua](https://simuty.com/2020/12/07/redis_7/)
+8. [Redis系列八 抢红包](https://simuty.com/2020/12/08/redis_8/)
 
 ### 进行中
 
