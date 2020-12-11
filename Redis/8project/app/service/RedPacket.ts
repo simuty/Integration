@@ -117,6 +117,22 @@ export default class RedPacket extends Service {
         return result;
     }
 
+    /**
+     * REDIS 布隆过滤器
+     * @param packetId 
+     * @param userId 
+     */
+    public async bf_test(deviceId: string) {
+        // 随机生成设备标示
+        const filePath = path.join(__dirname, '../bin/bloom.lua');
+        const luaScript = fs.readFileSync(filePath, "utf8");
+        const keyName = 'app:old_users:202c'
+        const cycleNum = 1000000;
+        await this.app.redis.eval(luaScript, 2, keyName, cycleNum);
+        const _deviceId = deviceId ? deviceId : '2b1d9cb5-db75-4b46-bd9b-171869fd244e';
+        const exists = await this.app.redis.eval(luaScript, 2, keyName, _deviceId);
+        console.log('是否存在', exists)
+    }
 
     /**
        * 生成红包数据

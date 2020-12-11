@@ -28,5 +28,15 @@ export default class RedisController extends Controller {
         this.ctx.body = result;
     }
     /** ------------------ 延迟队列相关 ------------------ */
+    // zset: score设置为时间戳，field: id
+    /** ------------------ 布隆过滤器相关 ------------------ */
+    public async bf_test() {
+        const { userId, redpacketId } = this.ctx.request.body;
+        const result = await this.service.redPacket.getRedPacket_redis_lua(
+            redpacketId,
+            userId,
+        );
+        this.ctx.body = result;
+    }
     
 }
