@@ -1,21 +1,14 @@
 import { Application } from 'egg';
-
-//https://www.javazhiyin.com/66747.html
-/**
- * https://www.cnblogs.com/zxporz/p/10813709.html
- * https://www.cnblogs.com/zxporz/tag/redis/
- * https://my.oschina.net/LucasZhu/blog/1827116
- *
- *
- * lua脚本
- * https://github.com/ZhuBaker/redis-lua/blob/master/src/main/resources/ratelimiter/rate_limiter.lua
- */
+    
 
 export default (app: Application) => {
     const { controller, router } = app;
 
-    // https://github.com/niantianlei/red-packet/blob/master/src/com/nian/controller/UserRedPacketController.java
-    // https://github.com/niantianlei/red-packet
-    router.get('/', controller.home.index);
-    router.post('/redPacket', controller.redPacket.grap);
+  /** ------------------ 红包相关 ------------------ */
+  router.post('/redis/create', controller.redisController.create);
+  router.post('/redis/grapSql', controller.redisController.grap_mysql);
+  router.post('/redis/grapLua', controller.redisController.grap_lua);
+  /** ------------------ 队列相关相关 ------------------ */
+  router.post('/redis/list', controller.redisController.grap_lua);
+
 };
