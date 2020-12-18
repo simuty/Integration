@@ -15,13 +15,13 @@ async function publish(msg: string, connect: amqp.Connection) {
     const channel = await connect.createConfirmChannel();
     await channel.assertExchange(exchange, exchangeType, { durable: false })
     const content = JSON.stringify({ msg });
-    const random = Math.random() < 0.4;
-    console.log('随机出现❌', random);
-    if (random) {
-        // 为了演示发送不到交换机
-        channel.close()
-        // connect.close();
-    }
+    // const random = Math.random() < 0.4;
+    // console.log('随机出现❌', random);
+    // if (random) {
+    //     // 为了演示发送不到交换机
+    //     channel.close()
+    //     // connect.close();
+    // }
     channel.publish(exchange, routingKey, Buffer.from(content), {}, (err, ok) => {
         if (err !== null) {
             console.log('发布消息-交换机-失败', err);

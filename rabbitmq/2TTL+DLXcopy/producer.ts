@@ -14,8 +14,10 @@ async function publish(msg: number, ttl: number) {
     const content = JSON.stringify({msg, ttl});
     channel.publish(exchange, routingKey, Buffer.from(content), {
         headers: {
-            'x-delay': ttl, // 一定要设置，否则无效,
-            'x-death': [{count: 3, reason: 'rejected'}]
+// ! 终于报错了，发布者报错，如果不设置x-delay
+            // 'x-delay': ttl, // 一定要设置，否则无效,
+            // 'x-death': [{count: 3, reason: 'rejected'}],
+            'x-delivery-count': 3
         }
     }, (err, ok)=>{
         console.log('发布消息-交换机-确认', err, ok, content);

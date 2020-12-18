@@ -6,6 +6,8 @@ import * as amqp from 'amqplib'
  * 
  * 2. createConfirmChannel
  * 
+ * https://www.cnblogs.com/520playboy/p/6925196.html
+ * 
  * @param msg 发布的消息
  * @param connect rabbitmq connect
  */
@@ -18,13 +20,24 @@ async function publish(msg: string, connect: amqp.Connection) {
     const channel = await connect.createConfirmChannel();
     await channel.assertExchange(exchange, exchangeType, { durable: false })
     const content = JSON.stringify({ msg });
-    channel.publish(exchange, '', Buffer.from(content), {mandatory: true}, (err, ok) => {
+    channel.publish(exchange, '', Buffer.from(content), { mandatory: true }, (err, ok) => {
         if (err !== null) {
             console.log('发布消息-交换机-失败', err);
         } else {
             console.log('发布消息-交换机-确认', err, ok, content);
         }
     });
+
+    
+    channel.on('return', (args)=>{
+        console.log("return: ", args);
+    })
+    channel.on('error', (args)=>{
+        console.log("error: ", args);
+    })
+    channel.on('close', (args)=>{
+        console.log("close: ", args);
+    })
     await channel.waitForConfirms()
     await channel.close();
 }
