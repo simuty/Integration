@@ -34,12 +34,12 @@ export async function orderSms() {
         // 根据消息ID，查询对应用户是否支付，如果支付ack, 否则发送短信&扔到死信队列，之后再说
         const success = mock.Random.boolean();
         if (success) {
-            console.info(`【短信】无需发送短信 ${content}`, )
+            console.info(`【短信--消费】无需发送短信 ${content}`, )
             channel.ack(msg, false);
         } else {
             // !可以扔到短信队列
-            console.info(`【短信】该用户尚未支付，发送短信中----- ${content}`);
-            channel.nack(msg, false, false);
+            console.info(`【短信--消费】该用户尚未支付，发送短信中----- ${content}`);
+            channel.nack(msg, false, true);
         }
     })
 }
@@ -64,7 +64,7 @@ export async function orderSummery() {
         } else {
             // 仍旧保留
             console.info(`【订单-消费】放入死信队列`);
-            channel.nack(msg, false, false);
+            channel.nack(msg, false, true);
             // 最大重试次数 [加入redis 或 其他队列]
             //     if () {
             //         console.info(`【订单-消费】第 ${retry} 次消费 ${deliveryTag} 失败，尝试重试`);
