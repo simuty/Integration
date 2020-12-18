@@ -2,7 +2,7 @@ import { Application } from 'egg';
     
 
 export default (app: Application) => {
-  const { controller, router } = app;
+    const { controller, router } = app;
 
   /** ------------------ 红包相关 ------------------ */
   router.post('/redis/create', controller.redisController.create);
