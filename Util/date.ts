@@ -1,7 +1,7 @@
 /*
  * @Author: simuty
  * @Date: 2020-11-17 10:06:01
- * @LastEditTime: 2020-12-02 10:43:04
+ * @LastEditTime: 2020-12-12 15:49:17
  * @LastEditors: Please set LastEditors
  * @Description:
  */
@@ -111,53 +111,30 @@ export function daysInMonth(
 }
 
 /**
- * 将各种时间转换成日期时间格式字符串 YYYY-MM-DD HH:mm:ss
- *
- * @param {Date | moment.Moment | number} time 如果是number，则为秒级时间戳
- * @return {string}
+ * 格式化时间
+ * @param date 时间
+ * @param type 默认 YYYY-MM-DD HH:mm:ss； 非 all 返回YYYY-MM-DD
  */
-export function format2DateTime(time?: Date | moment.Moment | number) {
-    let mt: moment.Moment;
-
-    if (!time) {
-        mt = moment();
-    } else if (time instanceof Date) {
-        mt = moment(time);
-    } else if (moment.isMoment(time)) {
-        mt = time;
-    } else {
-        mt = moment(time, "X");
+export function format(date: string | Date, type: string = 'all') {
+    if (!isValidDate(date)) {
+      moment(date).format(type === 'all' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
     }
-
-    return mt.format("YYYY-MM-DD HH:mm:ss");
-}
+  }
+  
 
 /**
- * 将各种时间转换成日期格式字符串 YYYY-MM-DD
- *
- * @param {Date | moment.Moment | number} time 如果是number，则为秒级时间戳
- * @param {string} format
- * @return {string}
+ * 格式化时间, 如果无效返回当前时间
+ * @param date 时间
+ * @param type 默认 YYYY-MM-DD HH:mm:ss； 非 all 返回YYYY-MM-DD
  */
-export function format2Date(
-    time?: Date | moment.Moment | number,
-    format: string = "YYYY-MM-DD",
-) {
-    let mt: moment.Moment;
-
-    if (!time) {
-        mt = moment();
-    } else if (time instanceof Date) {
-        mt = moment(time);
-    } else if (moment.isMoment(time)) {
-        mt = time;
-    } else {
-        mt = moment(time, "X");
-    }
-
-    return mt.format(format);
-}
-
+export function formatOrCurren(date: string | Date, type: string = 'all') {
+    const _date = isValidDate(date) ? date : moment();
+    return moment(_date).format(
+      type === 'all' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD',
+    );
+  }
+  
+  
 /**
  *
  *
