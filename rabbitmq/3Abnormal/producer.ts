@@ -2,8 +2,8 @@ import * as rabbitmq from './rabbitmq';
 
 export async function publish() {
     // 常规操作，用最简单的direct
-    const exchange = 'order.exchange';
-    const routingKey = 'order.routingKey';
+    const exchange = '3.order.exchange';
+    const routingKey = '3.order.routingKey';
     const exchangeType = 'direct';
 
     const connect = rabbitmq.connection();

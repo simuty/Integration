@@ -137,28 +137,30 @@ print(maximun({800, 19, 1, 4, 8, 102}))
 -- 可变参数 三点 ... 表示函数有可变的参数
 function add(...)
     local sum = 0
-    for i,v in ipairs{...} do 
+    for i, v in ipairs {...} do
         sum = sum + v
     end
     -- select("#",...) 来获取可变参数的数量
     -- .. 字符串拼接
-    print("总共传入 " .. select("#",...) .. " 个数")
+    print("总共传入 " .. select("#", ...) .. " 个数")
     return sum
 end
-print(add(1,2,3,4,5))
+print(add(1, 2, 3, 4, 5))
 -- 斐波那契数列
 function fib(n)
-    if n<2 then return 1 end
-    return fib(n-2) + fib(n+1)
+    if n < 2 then
+        return 1
+    end
+    return fib(n - 2) + fib(n + 1)
 end
 
 --[[
     闭包
 --]]
 function newCounter()
-    local i=0
+    local i = 0
     return function()
-        i= i+1
+        i = i + 1
         return i
     end
 end
@@ -190,7 +192,6 @@ print("---------table 类型---------")
 --[[
     table 类型
 --]]
-
 mytable = {}
 -- table 里面值的设置和获取
 mytable[1] = "元素1"
@@ -198,12 +199,11 @@ mytable["er"] = "元素2"
 print(mytable[1])
 
 -- 数组，lua里面的元素是从 1 开始的
-array = {10,20,30,40,50}
+array = {10, 20, 30, 40, 50}
 --[[
     等价于
     array = {[1]=10, [2]=20, [3]=30, [4]=40, [5]=50}
 --]]
-
 -- 数组里面值得获取
 print(array[1], array[2], array[3])
 -- 字典
@@ -216,4 +216,3 @@ dictionary = {
 -- 字典里面值得获取
 print(dictionary.key1, dictionary.key2, dictionary.key3)
 print("---------table 类型---------")
-

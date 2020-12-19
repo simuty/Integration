@@ -16,7 +16,7 @@ export async function create() {
     while(i < 3){
         i++;
         // N分钟后，对没支付的进行通知
-        const time = mock.Random.integer(500, 2000);
+        const time = mock.Random.integer(500, 2000) * 100;
         const expiration = 1000 * 60 * 60;
         const content = { id: mock.Random.integer(1000), number: mock.Random.integer(1, 3), time };
         const msg =  JSON.stringify(content);
@@ -33,20 +33,24 @@ export async function create() {
         }, (err, ok) => {
             // 生产端监听消息是否被ack；比如，记录日志啥的
             // 如果消费端，nack, 则不会再次到这里
-            // console.log("是否被ack----ok: ", err, ok);
+            console.log("【SMS】Message 是否被ack----ok: ", err, ok, msg);
+            // 记录日志
+            // logger({});
             if (err !== null) {
-                console.warn('【SMS】Message nacked!');
+                // console.warn('【SMS】Message nacked!');
             } else {
-                console.log('【SMS】Message acked');
+                // console.log('【SMS】Message acked');
             }
         });
         // !场景2, 发送后，供消费端消费
         channel.publish(ORDER.EXCHANE, ORDER.QUEUE_SUMMARY, Buffer.from(msg), {}, (err, ok) => {
-            if (err !== null) {
-                console.warn('【summary】Message nacked!');
-            } else {
-                console.log('【summary】Message acked');
-            }
+            console.log("【order】Message 是否被ack----ok: ", err, ok, msg);
+
+            // if (err !== null) {
+            //     console.warn(' ----【summary】Message nacked!');
+            // } else {
+            //     console.log(' ----【summary】Message acked');
+            // }
         })
 
     }

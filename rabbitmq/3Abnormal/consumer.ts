@@ -15,9 +15,9 @@ async function consumer(args: {exchange, queue, routingKey, connection}, cb: (ms
 
 export const run = (connection) => {
     consumer({
-        exchange: 'order.exchange',
-        routingKey: 'order.routingKey',
-        queue: 'order.queue',
+        exchange: '3.order.exchange',
+        routingKey: '3.order.routingKey',
+        queue: '3.order.queue',
         connection,
     }, async (msg, channel) => {
         const data = msg.content.toString();
@@ -31,16 +31,16 @@ export const run = (connection) => {
                  * 2. 重回队列
                  * 3. 扔到死信队列
                 */
-               channel.ack(msg);
-                // if(Number(data) < 6) {
-                //     // 手动ack
-                //     channel.ack(msg);
-                // } else {
-                //     // !1. 重回队列
-                //     channel.nack(msg);
-                //     // !2. 扔到死信队列
-                //     // 下个demo再整理。
-                // }
+            //    channel.ack(msg);
+                if(Number(data) < 6) {
+                    // 手动ack
+                    channel.ack(msg);
+                } else {
+                    // !1. 重回队列
+                    channel.nack(msg);
+                    // !2. 扔到死信队列
+                    // 下个demo再整理。
+                }
             } catch (err) {
                 console.error('消息 Ack Error：', err)
             }

@@ -2,7 +2,7 @@ import * as amqp from 'amqplib'
 import { sleep } from "../comment/util";
 
 const url = `amqp://localhost:5672`
-async function publish(msg: string, ttl: number) {
+async function publish(msg: number, ttl: number) {
     const exchange = 'delayed-exchange';
     const exchangeType = 'x-delayed-message'; // x-delayed-message 交换机的类型
     const routingKey = 'delayed-routingKey';
@@ -14,7 +14,10 @@ async function publish(msg: string, ttl: number) {
     const content = JSON.stringify({msg, ttl});
     channel.publish(exchange, routingKey, Buffer.from(content), {
         headers: {
-            'x-delay': ttl, // 一定要设置，否则无效
+// ! 终于报错了，发布者报错，如果不设置x-delay
+            // 'x-delay': ttl, // 一定要设置，否则无效,
+            // 'x-death': [{count: 3, reason: 'rejected'}],
+            'x-delivery-count': 3
         }
     }, (err, ok)=>{
         console.log('发布消息-交换机-确认', err, ok, content);
@@ -24,14 +27,21 @@ async function publish(msg: string, ttl: number) {
 }
 
 (async function test(){
-    await publish('msg0 过期时间', 6000);
-    await publish('msg0 过期时间', 2000);
-    await publish('msg0 过期时间', 3000);
-    await publish('msg0 过期时间', 3000);
-    await publish('msg0 过期时间', 3000);
-    await publish('msg0 过期时间', 3000);
-    await publish('msg0 过期时间', 3000);
-    await publish('msg0 过期时间', 3000);
-    await publish('msg0 过期时间', 3000);
+
+    let i=0;
+    while(i < 10){
+        i++;
+        await publish(i, 1000);
+    }
+
+    // await publish('msg0 过期时间', 1000);
+    // await publish('msg0 过期时间', 2000);
+    // await publish('msg0 过期时间', 3000);
+    // await publish('msg0 过期时间', 3000);
+    // await publish('msg0 过期时间', 3000);
+    // await publish('msg0 过期时间', 3000);
+    // await publish('msg0 过期时间', 3000);
+    // await publish('msg0 过期时间', 3000);
+    // await publish('msg0 过期时间', 3000);
     process.exit(0);
 })();
