@@ -14,18 +14,26 @@ async function publish(msg: string, connect: amqp.Connection) {
     const exchange = '5.mandatory.exchange';
     const exchangeType = 'direct';
     const routingKey = '5.mandatory.routingKey';
+    const queueName = '5.topic.queue'
+
 
     // 接受确认的channel
     const channel = await connect.createConfirmChannel();
     await channel.assertExchange(exchange, exchangeType, { durable: false })
     const content = JSON.stringify({ msg });
-    channel.publish(exchange, '', Buffer.from(content), { mandatory: true }, (err, ok) => {
+    channel.publish(exchange, routingKey, Buffer.from(content), { mandatory: true }, (err, ok) => {
         if (err !== null) {
             console.log('发布消息-交换机-失败', err);
         } else {
             console.log('发布消息-交换机-确认', err, ok, content);
         }
     });
+
+    // 绑定queue
+    const queueA = await channel.assertQueue(queueName);
+    await channel.bindQueue(queueA.queue, exchange, routingKey);
+
+
     // 
     channel.on('return', (args)=>{
         console.log("return: ", args);
