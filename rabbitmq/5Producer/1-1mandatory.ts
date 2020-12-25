@@ -6,6 +6,7 @@ import * as amqp from 'amqplib'
  * 1.1 publish回调函数
  * 1.2 channel回调函数
  * 
+ * 成功
  * 
  * @param msg 发布的消息
  * @param connect rabbitmq connect
@@ -14,6 +15,7 @@ async function publish(msg: string, connect: amqp.Connection) {
     const exchange = '5.mandatory.exchange';
     const exchangeType = 'direct';
     const routingKey = '5.mandatory.routingKey';
+    const queueName = '5.mandatory.queue'
 
     // 接受确认的channel
     const channel = await connect.createConfirmChannel();
@@ -26,6 +28,11 @@ async function publish(msg: string, connect: amqp.Connection) {
             console.log('发布消息-交换机-确认', err, ok, content);
         }
     });
+
+    // 绑定queue
+    const queueA = await channel.assertQueue(queueName);
+    await channel.bindQueue(queueA.queue, exchange, routingKey);
+
     // 
     channel.on('return', (args)=>{
         console.log("return: ", args);

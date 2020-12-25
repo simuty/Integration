@@ -3,33 +3,34 @@ import { sleep } from "../comment/util";
 
 const url = `amqp://localhost:5672`
 async function publish(msg: number, ttl: number) {
-    const exchange = 'delayed-exchange';
-    const exchangeType = 'x-delayed-message'; // x-delayed-message 交换机的类型
-    const routingKey = 'delayed-routingKey';
+    const exchange = '5.3.producer-exchange';
+    const exchangeType = 'direct';
+    const routingKey = '5.3.producer-routingKey';
 
     const connect = await amqp.connect(url);
     const channel = await connect.createConfirmChannel();
-    await channel.assertExchange(exchange, exchangeType, { durable: true, arguments: {'x-delayed-type': 'direct' }})
-    // console.log('发布消息', msg, ttl, routingKey);
-    const content = JSON.stringify({msg, ttl});
-    channel.publish(exchange, routingKey, Buffer.from(content), {
-        headers: {
-// ! 终于报错了，发布者报错，如果不设置x-delay
-            // 'x-delay': ttl, // 一定要设置，否则无效,
-            // 'x-death': [{count: 3, reason: 'rejected'}],
-            'x-delivery-count': 3
-        }
-    }, (err, ok)=>{
+    await channel.assertExchange(exchange, exchangeType, { durable: true })
+    const content = JSON.stringify({ msg, ttl });
+    channel.publish(exchange, routingKey, Buffer.from(content), {}, (err, ok) => {
         console.log('发布消息-交换机-确认', err, ok, content);
     });
+    channel.on('return', (args)=>{
+        console.log("return: ", args);
+    })
+    channel.on('error', (args)=>{
+        console.log("error: ", args);
+    })
+    channel.on('close', (args)=>{
+        console.log("close: ", args);
+    })
     await channel.waitForConfirms()
     await channel.close();
 }
 
-(async function test(){
+(async function test() {
 
-    let i=0;
-    while(i < 10){
+    let i = 0;
+    while (i < 3) {
         i++;
         await publish(i, 1000);
     }
